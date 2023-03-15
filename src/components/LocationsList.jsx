@@ -2,8 +2,9 @@ import React from 'react'
 
 export default function LocationsList(props) {
 
-  function handleClick(city)  {
-    props.getCity(city);
+  function handleClick(e)  {
+    console.log(e.target.textContent);
+    props.getCity(e.target.textContent);
   }
 
   return (
@@ -17,7 +18,7 @@ export default function LocationsList(props) {
             <ul className="locations-list">
                 {props.favCities.map((city) => {
                   return (
-                    <li onClick={handleClick(city)}>{city}</li>
+                    <li onClick={handleClick}>{city}</li>
                   )
                 })}
             </ul>

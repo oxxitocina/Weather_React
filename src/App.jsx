@@ -21,15 +21,14 @@ function App() {
     name:'Aktobe',
   });
   const [favCities, setFavCities] = useState(['Bali']);
-  const [isFavCity, setFavCity] = useState(false);
 
   useEffect(() => {
     getCityWeather(currentCity);
   }, [])
 
-  useEffect(() => {
-    console.log('testicles');
-  }, [currentCity, favCities])
+  // useEffect(() => {
+  //   console.log('testicles');
+  // }, [currentCity, favCities])
 
   function changeTab(newTab)  {
     setActiveTab(newTab);
