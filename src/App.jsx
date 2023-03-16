@@ -7,29 +7,39 @@ import ForecastTab from './pages/ForecastTab'
 import Navbar from './components/UI/Navbar/Navbar'
 import LocationsList from './components/LocationsList'
 import {WeatherContext} from './context/Context'
+import WeatherAPI from './API/WeatherApi'
 
 function App() {
 
+  const lastCityFound = (localStorage.getItem('lastCityFound') ?? 'Bali');
+  const savedCitiesList = getSavedCitiesList();
   const [isActiveTab, setActiveTab] = useState('now-tab');
-  const API = {
-    URL: 'http://api.openweathermap.org/data/2.5/weather',
-    API_KEY: 'f660a2fb1e4bad108d6160b7f58c555f',
-  };
-  const [currentCity, setCurrentCity] = useState('Bali');
+  const [currentCity, setCurrentCity] = useState(lastCityFound);
+  const [favouriteCities, setfavouriteCities] = useState(savedCitiesList);
+
   const [weatherData, setWeatherData] = useState({
     main:{temp: ''},
     name:'',
   });
-  const [favCities, setFavCities] = useState(['Bali']);
-
 
   useEffect(() => {
     getCityWeather(currentCity);
   }, [])
 
   useEffect(() => {
-    console.log('testicles');
-  }, [currentCity, favCities])
+    localStorage.setItem('lastCityFound', currentCity);
+    localStorage.setItem('savedCitiesList', JSON.stringify(favouriteCities));
+  }, [currentCity, favouriteCities])
+
+  function getSavedCitiesList() {
+    try {
+      if(JSON.parse(localStorage.getItem('savedCitiesList')) === null || undefined)  {
+        localStorage.setItem('savedCitiesList', JSON.stringify([]));
+      }
+    }catch(error) {
+    }
+    return JSON.parse(localStorage.getItem('savedCitiesList'));
+  }
 
   function changeTab(newTab)  {
     setActiveTab(newTab);
@@ -42,7 +52,7 @@ function App() {
 
   async function getCityWeather(city) {
     try{
-      let response = await fetch(`${API.URL}?q=${city}&appid=${API.API_KEY}&units=metric`);
+      let response = await fetch(`${WeatherAPI.URL}?q=${city}&appid=${WeatherAPI.API_KEY}&units=metric`);
       let result = await response.json();
         if(response.status === 200)  {
           setWeatherData(result);
@@ -56,7 +66,7 @@ function App() {
     switch(tab) {
       case 'now-tab':
         return (
-          <NowTab addToFavorite={addToFavorite} deleteFromFavorite={deleteFromFavorite} favCities={favCities}/>
+          <NowTab addToFavourite={addToFavourite} deleteFromFavorite={deleteFromFavorite} favouriteCities={favouriteCities}/>
         );
       case 'details-tab':
         return (
@@ -69,13 +79,13 @@ function App() {
     }
   }
 
-  function addToFavorite()  {
-    setFavCities([...favCities, currentCity]);
-    console.log(favCities);
+  function addToFavourite()  {
+    setfavouriteCities([...favouriteCities, currentCity]);
+    console.log(favouriteCities);
   }
 
   function deleteFromFavorite(cityToDelete) {
-    setFavCities(favCities.filter(city => city !== cityToDelete));
+    setfavouriteCities(favouriteCities.filter(city => city !== cityToDelete));
   }
 
   return (
@@ -93,7 +103,7 @@ function App() {
                 </div>
               </WeatherContext.Provider>
 
-              <LocationsList favCities={favCities} getCity={getCity}/>
+              <LocationsList favouriteCities={favouriteCities} getCity={getCity}/>
             </div>
 
         </div>

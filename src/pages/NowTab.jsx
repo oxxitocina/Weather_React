@@ -8,15 +8,15 @@ export default function NowTab(props) {
     const weatherData = useContext(WeatherContext);
 
     function handleButton() {
-        if(!props.favCities.find(city => city === weatherData.name)) {
-            props.addToFavorite();
+        if(!props.favouriteCities.find(city => city === weatherData.name)) {
+            props.addToFavourite();
         }else{
             props.deleteFromFavorite(weatherData.name);
         }
     }
 
     function renderButton() {
-        if(!props.favCities.find(city => city === weatherData.name)) {
+        if(!props.favouriteCities.find(city => city === weatherData.name)) {
             return  (
                 <button onClick={handleButton} id="heart" className="heart-empty"/>
             )

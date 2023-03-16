@@ -16,7 +16,7 @@ export default function LocationsList(props) {
 
         <div className="locations-container">
             <ul className="locations-list">
-                {props.favCities.map((city) => {
+                {props.favouriteCities.map((city) => {
                   return (
                     <li onClick={handleClick}>{city}</li>
                   )

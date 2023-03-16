@@ -5,7 +5,6 @@ export default function Navbar(props) {
 
   function handleButton(event)  {
     props.changeTab(event.target.id);
-    console.log(event.target.id);
   }
 
   return (
