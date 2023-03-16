@@ -1,21 +1,22 @@
-import React from 'react'
+import {React, useContext} from 'react'
 import imgMask from "../assets/img/mask.png"
 import imgCloud from "../assets/img/cloud.png"
+import { WeatherContext } from '../context/Context';
 
 export default function NowTab(props) {
 
-    console.log(props);
+    const weatherData = useContext(WeatherContext);
 
     function handleButton() {
-        if(!props.favCities.find(city => city === props.data.name)) {
+        if(!props.favCities.find(city => city === weatherData.name)) {
             props.addToFavorite();
         }else{
-            props.deleteFromFavorite(props.data.name);
+            props.deleteFromFavorite(weatherData.name);
         }
     }
 
     function renderButton() {
-        if(!props.favCities.find(city => city === props.data.name)) {
+        if(!props.favCities.find(city => city === weatherData.name)) {
             return  (
                 <button onClick={handleButton} id="heart" className="heart-empty"/>
             )
@@ -30,7 +31,7 @@ export default function NowTab(props) {
     <div className='now-tab'>
 
         <div className="temperature">
-            <p>{props.data.main.temp}</p>
+            <p>{weatherData.main.temp}</p>
             <div className="mask">
                 <img src={imgMask} alt="mask"/>
             </div>
@@ -41,7 +42,7 @@ export default function NowTab(props) {
         </div>
 
         <div className="city">
-            {props.data.name}
+            {weatherData.name}
         </div>
 
         {renderButton()}

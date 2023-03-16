@@ -1,4 +1,4 @@
-import {React, useState, useEffect} from 'react'
+import {React, useState, useEffect, useContext} from 'react'
 import './App.css'
 import SearchForm from './components/SearchForm'
 import NowTab from './pages/NowTab'
@@ -6,7 +6,7 @@ import DetailsTab from './pages/DetailsTab'
 import ForecastTab from './pages/ForecastTab'
 import Navbar from './components/UI/Navbar/Navbar'
 import LocationsList from './components/LocationsList'
-
+import {WeatherContext} from './context/Context'
 
 function App() {
 
@@ -17,18 +17,19 @@ function App() {
   };
   const [currentCity, setCurrentCity] = useState('Bali');
   const [weatherData, setWeatherData] = useState({
-    main:{temp:14},
-    name:'Aktobe',
+    main:{temp: ''},
+    name:'',
   });
   const [favCities, setFavCities] = useState(['Bali']);
+
 
   useEffect(() => {
     getCityWeather(currentCity);
   }, [])
 
-  // useEffect(() => {
-  //   console.log('testicles');
-  // }, [currentCity, favCities])
+  useEffect(() => {
+    console.log('testicles');
+  }, [currentCity, favCities])
 
   function changeTab(newTab)  {
     setActiveTab(newTab);
@@ -55,7 +56,7 @@ function App() {
     switch(tab) {
       case 'now-tab':
         return (
-          <NowTab data={weatherData} addToFavorite={addToFavorite} deleteFromFavorite={deleteFromFavorite} favCities={favCities}/>
+          <NowTab addToFavorite={addToFavorite} deleteFromFavorite={deleteFromFavorite} favCities={favCities}/>
         );
       case 'details-tab':
         return (
@@ -84,10 +85,13 @@ function App() {
             <SearchForm getCity={getCity}/>
 
             <div className="grid-container">
-              <div className="main-tab">
-                {renderSwitch(isActiveTab)}
-                <Navbar changeTab={changeTab}/>
-              </div>
+
+              <WeatherContext.Provider value={weatherData}>
+                <div className="main-tab">
+                  {renderSwitch(isActiveTab)}
+                  <Navbar changeTab={changeTab}/>
+                </div>
+              </WeatherContext.Provider>
 
               <LocationsList favCities={favCities} getCity={getCity}/>
             </div>
